@@ -2,13 +2,20 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+        <View style={styles.container}>
       <Text style={styles.title}>Welcome to GiftLocker</Text>
 
       <Button 
         title="Make an Account"
         onPress={() => navigation.navigate('Create')}
       />
+
+      <View style={{ marginTop: 20 }}>
+        <Button 
+          title="Login"
+          onPress={() => navigation.navigate('Login')}
+        />
+      </View>
     </View>
   );
 }
