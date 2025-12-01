@@ -1,10 +1,21 @@
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
+import { auth, createUserWithEmailAndPassword } from '../firebaseConfig';
 
 export default function CreateScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleRegister = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert('Success', 'Account created!');
+      navigation.navigate('Home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -12,48 +23,29 @@ export default function CreateScreen({ navigation }) {
 
       <TextInput
         style={styles.input}
-        placeholder="Enter your username"
+        placeholder="Enter username"
         value={username}
         onChangeText={setUsername}
       />
 
-
       <TextInput
         style={styles.input}
-        placeholder="Enter your password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={true}
-      />
-
-<TextInput
-        style={styles.input}
-        placeholder="Enter your email"
+        placeholder="Enter email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
 
-      <Button title="Save" onPress={() => alert("Saving soon...")} />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={true}
+      />
+
+      <Button title="Save" onPress={handleRegister} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  heading: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 6,
-    marginBottom: 20,
-  },
-});
