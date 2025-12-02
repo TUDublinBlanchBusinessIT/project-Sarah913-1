@@ -1,6 +1,7 @@
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
-import { auth, createUserWithEmailAndPassword } from '../firebaseConfig';
+import { auth, createUserWithEmailAndPassword, db } from '../firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function CreateScreen({ navigation }) {
   const [username, setUsername] = useState('');
@@ -9,7 +10,16 @@ export default function CreateScreen({ navigation }) {
 
   const handleRegister = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save extra info in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        username: username,
+        email: email,
+      });
+
       Alert.alert('Success', 'Account created!');
       navigation.navigate('Home');
     } catch (error) {
@@ -49,3 +59,15 @@ export default function CreateScreen({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  heading: { fontSize: 24, marginBottom: 20 },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 6,
+    marginBottom: 20,
+  },
+});
