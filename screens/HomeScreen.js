@@ -1,8 +1,15 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   return (
-        <View style={styles.container}>
+    <View style={styles.container}>
+      {/* Logo */}
+      <Image 
+        source={require('../assets/logo.png')} // adjust path as needed
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
       <Text style={styles.title}>Welcome to GiftLocker</Text>
 
       <Button 
@@ -25,6 +32,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff', // optional
+  },
+  logo: {
+    width: 150,   // adjust size
+    height: 150,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
