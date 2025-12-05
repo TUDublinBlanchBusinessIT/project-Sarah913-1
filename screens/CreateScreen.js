@@ -2,6 +2,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
 import { auth, createUserWithEmailAndPassword, db } from '../firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
 export default function CreateScreen({ navigation }) {
   const [username, setUsername] = useState('');

@@ -1,18 +1,17 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID',
-};
+  apiKey: "AIzaSyD-5Mr4zd1E3-isbKVo6ZU1RdKEHdnkmc0",
+  authDomain: "giftlocker-f02c9.firebaseapp.com",
+  projectId: "giftlocker-f02c9",
+  storageBucket: "giftlocker-f02c9.firebasestorage.app",
+  messagingSenderId: "201789152566",
+  appId: "1:201789152566:web:32f49eed02b38e8702a797",
+  measurementId: "G-HP0RV48V3Y"
+}
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-export { auth, createUserWithEmailAndPassword, db };
+export const auth = getAuth(app);
+export const db = getFirestore(app);

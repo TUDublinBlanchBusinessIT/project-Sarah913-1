@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', // optional
   },
   logo: {
-    width: 150,   // adjust size
-    height: 150,
+    width: 300,   // adjust size
+    height: 300,
     marginBottom: 20,
   },
   title: {
