@@ -27,8 +27,19 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setPassword}
         secureTextEntry={true}
       />
-
-      <Button title="Login" onPress={() => alert("Logging in soon...")} />
+      <Button
+        title="Login"
+        onPress={async () => {
+          try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            alert("Login successful!");
+            navigation.navigate('GiftCards'); // or whatever screen you want to show after login
+          } catch (error) {
+            alert(error.message);
+          }
+        }}
+      />
     </View>
   );
 }
