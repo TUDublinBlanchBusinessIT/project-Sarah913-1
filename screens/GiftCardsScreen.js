@@ -13,14 +13,14 @@ export default function GiftCardsScreen() {
   const [bgColors, setBgColors] = useState(['#4c669f', '#3b5998', '#192f6a']); // default gradient
 
   const brands = [
-    { id: '1', name: 'Amazon', image: require('../assets/image1.png'), colors: ['#FF9900', '#FFCC00'] },
+    { id: '1', name: 'Amazon', image: require('../assets/image1.png'), colors: ['#080808ff', '#bea644ff'] },
     { id: '2', name: 'Spotify', image: require('../assets/image2.png'), colors: ['#1DB954', '#1ED760'] },
-    { id: '3', name: 'Apple', image: require('../assets/image3.png'), colors: ['#000000', '#434343'] },
-    { id: '4', name: 'Nike', image: require('../assets/image4.png'), colors: ['#111111', '#444444'] },
+    { id: '3', name: 'Apple', image: require('../assets/image3.png'), colors: ['#a86262ff', '#b04a4aff'] },
+    { id: '4', name: 'Nike', image: require('../assets/image4.png'), colors: ['#d98320ff', '#d15711ff'] },
     { id: '5', name: 'Starbucks', image: require('../assets/image5.png'), colors: ['#00704A', '#00A86B'] },
     { id: '6', name: 'Adidas', image: require('../assets/image6.png'), colors: ['#000000', '#666666'] },
     { id: '7', name: 'Dunnes', image: require('../assets/image7.png'), colors: ['#2C3E50', '#BDC3C7'] },
-    { id: '8', name: 'Vue', image: require('../assets/image8.png'), colors: ['#FF512F', '#DD2476'] },
+    { id: '8', name: 'Vue', image: require('../assets/image8.png'), colors: ['#1c1b1aff', '#bcb311ff'] },
     { id: '9', name: 'PlayStation', image: require('../assets/image9.png'), colors: ['#003791', '#0070D1'] },
   ];
 
@@ -97,22 +97,25 @@ export default function GiftCardsScreen() {
           </TouchableOpacity>
         )}
       />
+{/* Amount section title */}
+<Text style={styles.amountTitle}>Choose amount to send</Text>
 
-      {/* Amount selector */}
-      <View style={styles.amountSelector}>
-        {[10, 25, 50].map((amt) => (
-          <TouchableOpacity
-            key={amt}
-            style={[
-              styles.amountButton,
-              selectedAmount === amt && styles.amountButtonSelected,
-            ]}
-            onPress={() => setSelectedAmount(amt)}
-          >
-            <Text style={styles.amountText}>€{amt}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+{/* Amount selector */}
+<View style={styles.amountSelector}>
+  {[10, 25, 50].map((amt) => (
+    <TouchableOpacity
+      key={amt}
+      style={[
+        styles.amountButton,
+        selectedAmount === amt && styles.amountButtonSelected,
+      ]}
+      onPress={() => setSelectedAmount(amt)}
+    >
+      <Text style={styles.amountText}>€{amt}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
+
 
       <View style={styles.transactionsContainer}>
         <Text style={styles.title}>Transactions</Text>
@@ -139,6 +142,15 @@ const styles = StyleSheet.create({
   balance: { fontSize: 18, marginBottom: 10, textAlign: 'center', color: '#fff' },
   subtitle: { fontSize: 18, marginVertical: 15, textAlign: 'center', color: '#fff' },
 
+  amountTitle: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  textAlign: 'center',
+  marginVertical: 10,
+  color: '#fff', // matches your gradient background
+},
+
+
   brandCard: {
     backgroundColor: '#eee',
     padding: 20,
@@ -160,7 +172,7 @@ const styles = StyleSheet.create({
   amountSelector: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginVertical: 15,
+    marginVertical: 8,
   },
   amountButton: {
     backgroundColor: '#fff',
@@ -174,9 +186,9 @@ const styles = StyleSheet.create({
   amountText: { fontSize: 16, fontWeight: 'bold' },
 
   transactionsContainer: {
-    flex: 1,
+    flex: 3,
     justifyContent: 'flex-end',
-    marginTop: 20,
+    marginTop: 10,
   },
   title: { fontSize: 24, marginBottom: 20, textAlign: 'center', color: '#fff' },
   card: { padding: 20, borderWidth: 1, borderRadius: 10, marginBottom: 12, backgroundColor: '#fff' },
