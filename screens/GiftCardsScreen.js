@@ -97,24 +97,31 @@ export default function GiftCardsScreen() {
           </TouchableOpacity>
         )}
       />
-{/* Amount section title */}
-<Text style={styles.amountTitle}>Choose amount to send</Text>
+      {/* Amount section title */}
+      <Text style={styles.amountTitle}>Choose amount to send</Text>
 
-{/* Amount selector */}
-<View style={styles.amountSelector}>
-  {[10, 25, 50].map((amt) => (
-    <TouchableOpacity
-      key={amt}
-      style={[
-        styles.amountButton,
-        selectedAmount === amt && styles.amountButtonSelected,
-      ]}
-      onPress={() => setSelectedAmount(amt)}
-    >
-      <Text style={styles.amountText}>€{amt}</Text>
-    </TouchableOpacity>
-  ))}
-</View>
+      <Text style={styles.amountTitle}>Choose amount to send</Text>
+      <View style={styles.amountSelector}>
+        {[10, 25, 50].map((amt) => (
+          <TouchableOpacity
+            key={amt}
+            style={[
+              styles.amountButton,
+              selectedAmount === amt && styles.amountButtonSelected,
+            ]}
+            onPress={() => setSelectedAmount(amt)}
+          >
+            <Text style={styles.amountText}>€{amt}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <TouchableOpacity
+        style={styles.continueButton}
+        onPress={() => navigation.navigate('BrandScreen', { amount: selectedAmount })}
+      >
+        <Text style={styles.continueText}>Continue</Text>
+      </TouchableOpacity>
 
 
       <View style={styles.transactionsContainer}>
@@ -143,12 +150,12 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 18, marginVertical: 15, textAlign: 'center', color: '#fff' },
 
   amountTitle: {
-  fontSize: 18,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  marginVertical: 10,
-  color: '#fff', // matches your gradient background
-},
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
+    color: '#fff', // matches your gradient background
+  },
 
 
   brandCard: {
