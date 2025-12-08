@@ -3,21 +3,25 @@ import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Alert } from
 import { auth, db } from '../firebaseConfig';
 import { collection, getDocs, addDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export default function GiftCardsScreen() {
   const [giftcards, setGiftcards] = useState([]);
   const [username, setUsername] = useState('');
+  const [selectedAmount, setSelectedAmount] = useState(25);
+  const [bgColors, setBgColors] = useState(['#4c669f', '#3b5998', '#192f6a']); // default gradient
 
   const brands = [
-    { id: '1', name: 'Amazon', image: require('../assets/image1.png') },
-    { id: '2', name: 'Starbucks', image: require('../assets/image2.png') },
-    { id: '3', name: 'Nike', image: require('../assets/image3.png') },
-    { id: '4', name: 'Apple', image: require('../assets/image4.png') },
-    { id: '5', name: 'Spotify', image: require('../assets/image5.png') },
-    { id: '6', name: 'Adidas', image: require('../assets/image6.png') },
-    { id: '7', name: 'Dunnes A', image: require('../assets/image7.png') },
-    { id: '8', name: 'Dunnes B', image: require('../assets/image8.png') },
-    { id: '9', name: 'Dunnes C', image: require('../assets/image9.png') },
+    { id: '1', name: 'Amazon', image: require('../assets/image1.png'), colors: ['#FF9900', '#FFCC00'] },
+    { id: '2', name: 'Spotify', image: require('../assets/image2.png'), colors: ['#1DB954', '#1ED760'] },
+    { id: '3', name: 'Apple', image: require('../assets/image3.png'), colors: ['#000000', '#434343'] },
+    { id: '4', name: 'Nike', image: require('../assets/image4.png'), colors: ['#111111', '#444444'] },
+    { id: '5', name: 'Starbucks', image: require('../assets/image5.png'), colors: ['#00704A', '#00A86B'] },
+    { id: '6', name: 'Adidas', image: require('../assets/image6.png'), colors: ['#000000', '#666666'] },
+    { id: '7', name: 'Dunnes', image: require('../assets/image7.png'), colors: ['#2C3E50', '#BDC3C7'] },
+    { id: '8', name: 'Vue', image: require('../assets/image8.png'), colors: ['#FF512F', '#DD2476'] },
+    { id: '9', name: 'PlayStation', image: require('../assets/image9.png'), colors: ['#003791', '#0070D1'] },
   ];
 
   useEffect(() => {
@@ -46,28 +50,33 @@ export default function GiftCardsScreen() {
     return unsubscribe;
   }, []);
 
-  const handleSendGiftcard = async (brandName) => {
+  const handleSendGiftcard = async (brand) => {
     try {
       const user = auth.currentUser;
       if (!user) return;
 
       await addDoc(collection(db, 'users', user.uid, 'giftcards'), {
         sender: user.email,
-        brand: brandName,
-        amount: 25,
+        brand: brand.name,
+        amount: selectedAmount,
         message: 'Happy BIRTHDAY! Have the best day',
         createdAt: serverTimestamp(),
       });
 
-      Alert.alert('Gift card sent!', `You selected ${brandName}`);
+      setBgColors(brand.colors); // change background dynamically
+      Alert.alert('Gift card sent!', `You selected ${brand.name} for €${selectedAmount}`);
     } catch (error) {
       Alert.alert('Error', error.message);
     }
   };
 
+  // Balance checker: sum of all amounts
+  const totalBalance = giftcards.reduce((sum, card) => sum + Number(card.amount || 0), 0);
+
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={bgColors} style={styles.container}>
       <Text style={styles.username}>Welcome, {username}</Text>
+      <Text style={styles.balance}>Your Balance: €{totalBalance}</Text>
 
       <Text style={styles.subtitle}>Choose a Gift Card</Text>
       <FlatList
@@ -75,19 +84,35 @@ export default function GiftCardsScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         snapToAlignment="center"
-        snapToInterval={220} // card width + marginRight
+        snapToInterval={220}
         decelerationRate="fast"
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.brandCard}
-            onPress={() => handleSendGiftcard(item.name)}
+            onPress={() => handleSendGiftcard(item)}
           >
             <Image source={item.image} style={styles.brandImage} />
             <Text style={styles.brandText}>{item.name}</Text>
           </TouchableOpacity>
         )}
       />
+
+      {/* Amount selector */}
+      <View style={styles.amountSelector}>
+        {[10, 25, 50].map((amt) => (
+          <TouchableOpacity
+            key={amt}
+            style={[
+              styles.amountButton,
+              selectedAmount === amt && styles.amountButtonSelected,
+            ]}
+            onPress={() => setSelectedAmount(amt)}
+          >
+            <Text style={styles.amountText}>€{amt}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <View style={styles.transactionsContainer}>
         <Text style={styles.title}>Transactions</Text>
@@ -104,14 +129,15 @@ export default function GiftCardsScreen() {
           )}
         />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  username: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
-  subtitle: { fontSize: 18, marginVertical: 15, textAlign: 'center' },
+  username: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center', color: '#fff' },
+  balance: { fontSize: 18, marginBottom: 10, textAlign: 'center', color: '#fff' },
+  subtitle: { fontSize: 18, marginVertical: 15, textAlign: 'center', color: '#fff' },
 
   brandCard: {
     backgroundColor: '#eee',
@@ -131,12 +157,28 @@ const styles = StyleSheet.create({
   },
   brandText: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
 
+  amountSelector: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 15,
+  },
+  amountButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+  },
+  amountButtonSelected: {
+    backgroundColor: '#FFD700',
+  },
+  amountText: { fontSize: 16, fontWeight: 'bold' },
+
   transactionsContainer: {
     flex: 1,
     justifyContent: 'flex-end',
     marginTop: 20,
   },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-  card: { padding: 20, borderWidth: 1, borderRadius: 10, marginBottom: 12 },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center', color: '#fff' },
+  card: { padding: 20, borderWidth: 1, borderRadius: 10, marginBottom: 12, backgroundColor: '#fff' },
   brand: { fontSize: 20, fontWeight: 'bold' },
 });

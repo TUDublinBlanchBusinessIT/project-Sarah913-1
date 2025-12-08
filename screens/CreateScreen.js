@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
-import { auth,db } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -15,15 +15,19 @@ export default function CreateScreen({ navigation }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      console.log("User created:", user.uid);
+
       // Save extra info in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         username: username,
         email: email,
+        createdAt: new Date().toISOString(),
       });
 
       Alert.alert('Success', 'Account created!');
       navigation.navigate('Home');
     } catch (error) {
+      console.error("Error creating user:", error);
       Alert.alert('Error', error.message);
     }
   };
