@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Button, StyleSheet } from 'react-native';
 import { auth, db } from '../firebaseConfig';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
 
 export default function GiftCardsScreen() {
   const [giftcards, setGiftcards] = useState([]);
@@ -9,14 +9,22 @@ export default function GiftCardsScreen() {
   const [brand, setBrand] = useState('');
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
+  const [username, setUsername] = useState('');
 
-  // Fetch received gift cards
+  // Fetch username + giftcards
   useEffect(() => {
-    const fetchGiftcards = async () => {
+    const fetchData = async () => {
       try {
         const user = auth.currentUser;
         if (!user) return;
 
+        // 🔹 Fetch username from Firestore
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          setUsername(userDoc.data().username);
+        }
+
+        // 🔹 Fetch giftcards
         const giftcardsRef = collection(db, "users", user.uid, "giftcards");
         const snapshot = await getDocs(giftcardsRef);
 
@@ -26,19 +34,17 @@ export default function GiftCardsScreen() {
         }));
         setGiftcards(cards);
       } catch (error) {
-        console.error("Error fetching giftcards:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchGiftcards();
+    fetchData();
   }, []);
 
   // Send a gift card
   const handleSendGiftcard = async () => {
     try {
-      // Normally you'd look up recipient UID by email
-      // For demo, assume recipient UID is their email string
-      const recipientUid = recipient;
+      const recipientUid = recipient; // For demo, using email/UID directly
 
       await addDoc(collection(db, "users", recipientUid, "giftcards"), {
         sender: auth.currentUser.email,
@@ -60,6 +66,9 @@ export default function GiftCardsScreen() {
 
   return (
     <View style={styles.container}>
+      {/* 🔹 Username displayed at the top */}
+      <Text style={styles.username}>Welcome, {username}</Text>
+
       <Text style={styles.title}>My Gift Cards</Text>
       <FlatList
         data={giftcards}
@@ -86,7 +95,8 @@ export default function GiftCardsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, marginBottom: 20 },
+  username: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
   subtitle: { fontSize: 18, marginTop: 20, marginBottom: 10 },
   card: { padding: 15, borderWidth: 1, borderRadius: 8, marginBottom: 10 },
   brand: { fontSize: 18, fontWeight: 'bold' },
