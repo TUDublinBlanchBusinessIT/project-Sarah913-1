@@ -97,8 +97,6 @@ export default function GiftCardsScreen({navigation}) {
           </TouchableOpacity>
         )}
       />
-      {/* Amount section title */}
-      <Text style={styles.amountTitle}>Choose amount to send</Text>
 
       <Text style={styles.amountTitle}>Choose amount to send</Text>
       <View style={styles.amountSelector}>
@@ -191,6 +189,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
   },
   amountText: { fontSize: 16, fontWeight: 'bold' },
+
+  continueButton: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginTop: 10,
+  },
 
   transactionsContainer: {
     flex: 3,

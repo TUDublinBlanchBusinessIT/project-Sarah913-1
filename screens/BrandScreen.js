@@ -8,7 +8,17 @@ export default function BrandScreen({ route }) {
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
 
-  const brands = [ /* same array as before */ ];
+  const brands = [
+    { id: '1', name: 'Amazon', image: require('../assets/image1.png') },
+    { id: '2', name: 'Spotify', image: require('../assets/image2.png') },
+    { id: '3', name: 'Apple', image: require('../assets/image3.png') },
+    { id: '4', name: 'Nike', image: require('../assets/image4.png') },
+    { id: '5', name: 'Starbucks', image: require('../assets/image5.png') },
+    { id: '6', name: 'Adidas', image: require('../assets/image6.png') },
+    { id: '7', name: 'Dunnes', image: require('../assets/image7.png') },
+    { id: '8', name: 'Vue', image: require('../assets/image8.png') },
+    { id: '9', name: 'PlayStation', image: require('../assets/image9.png') },
+  ];
 
   const handleSendGiftcard = async (brand) => {
     try {
@@ -35,7 +45,7 @@ export default function BrandScreen({ route }) {
       <Text style={styles.title}>Select a Brand</Text>
       <FlatList
         data={brands}
-        horizontal
+        numColumns={2}   // 👈 grid layout: 2 columns
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.brandCard} onPress={() => handleSendGiftcard(item)}>
@@ -43,6 +53,7 @@ export default function BrandScreen({ route }) {
             <Text style={styles.brandText}>{item.name}</Text>
           </TouchableOpacity>
         )}
+        columnWrapperStyle={{ justifyContent: 'space-between' }} // spacing between columns
       />
 
       <TextInput
@@ -60,6 +71,7 @@ export default function BrandScreen({ route }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -76,20 +88,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     padding: 20,
     borderRadius: 20,
-    marginRight: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 200,
-    height: 250,
+    width: '48%',   // 👈 makes two cards fit per row
+    marginBottom: 15,
   },
   brandImage: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     resizeMode: 'contain',
     marginBottom: 12,
   },
   brandText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -101,4 +112,3 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-
