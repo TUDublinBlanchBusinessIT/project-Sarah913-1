@@ -60,3 +60,45 @@ export default function BrandScreen({ route }) {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  brandCard: {
+    backgroundColor: '#eee',
+    padding: 20,
+    borderRadius: 20,
+    marginRight: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 200,
+    height: 250,
+  },
+  brandImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    marginBottom: 12,
+  },
+  brandText: {
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 10,
+  },
+});
+

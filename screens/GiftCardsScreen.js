@@ -6,7 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-export default function GiftCardsScreen() {
+export default function GiftCardsScreen({navigation}) {
   const [giftcards, setGiftcards] = useState([]);
   const [username, setUsername] = useState('');
   const [selectedAmount, setSelectedAmount] = useState(25);
