@@ -8,8 +8,22 @@ export default function CreateScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // 👈 new state for errors
 
   const handleRegister = async () => {
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+
+    // Password length validation
+    if (password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long');
+      return;
+    }
+
     try {
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -24,11 +38,12 @@ export default function CreateScreen({ navigation }) {
         createdAt: new Date().toISOString(),
       });
 
+      setErrorMessage(''); // clear any previous errors
       Alert.alert('Success', 'Account created!');
       navigation.navigate('Home');
     } catch (error) {
       console.error("Error creating user:", error);
-      Alert.alert('Error', error.message);
+      setErrorMessage(error.message); // show Firebase error if login fails
     }
   };
 
@@ -60,6 +75,9 @@ export default function CreateScreen({ navigation }) {
         secureTextEntry={true}
       />
 
+      {/* Error message */}
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+
       <Button title="Save" onPress={handleRegister} />
     </View>
   );
@@ -74,5 +92,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     marginBottom: 20,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
